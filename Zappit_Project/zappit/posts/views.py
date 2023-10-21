@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics,permissions
+from rest_framework import generics,permissions,validators
 from .serializers import PostSerializer,VoteSerializer
 from .models import Post,Vote
 
@@ -20,3 +20,6 @@ class VoteCreate(generics.CreateAPIView):
         user = self.request.user
         post = Post.objects.get(pk=self.kwargs['pk'])
         return Vote.objects.filter(voter=user, post=post)
+    
+    def perform_create(self, serializer):
+        serializer.save(voter=self.request.user, post = Post.objects.get(pk=self.kwargs['pk']))
