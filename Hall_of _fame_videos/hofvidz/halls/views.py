@@ -4,7 +4,7 @@ from django.views import generic
 from .models import Hall,Video
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login,authenticate
-from .forms import VideoForm
+from .forms import VideoForm,SearchForm
 
 
 
@@ -16,6 +16,7 @@ def dashboard(request):
 
 def add_video(request, pk):
     form = VideoForm()
+    search_form = SearchForm()
     if request.method == 'POST':
         form = VideoForm(request.POST)
         if form.is_valid():
@@ -25,7 +26,7 @@ def add_video(request, pk):
             video.youtube_id = form.cleaned_data['youtube_id']
             video.hall = Hall.objects.get(pk=pk)
             video.save()
-    return render(request, 'halls/add_video.html', {'form':form,})
+    return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form})
 
 class SignUp(generic.CreateView):
     form_class  = UserCreationForm
